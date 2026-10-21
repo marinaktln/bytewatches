@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bytewatch</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#fafaf8;--card:#fff;--tx:#1c1c1e;--mu:#6b6b70;--ac:#0b5fff;--bd:#e4e4e0;--tip:#eef4ff}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121214;--card:#1b1b1e;--tx:#ececee;--mu:#9a9aa2;--ac:#6ea0ff;--bd:#2c2c31;--tip:#18233b}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.7 Georgia,'Times New Roman',serif}
+header{background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.bar{max-width:1180px;margin:auto;padding:14px 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.logo{font:800 24px/1 system-ui,sans-serif;cursor:pointer;letter-spacing:-.5px}.logo span{color:var(--ac)}
+.bar input{flex:1;min-width:180px;padding:10px 14px;border:1px solid var(--bd);border-radius:24px;background:var(--bg);color:var(--tx);font:16px system-ui,sans-serif}
+.wrap{max-width:1180px;margin:auto;padding:0 20px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:36px}
+@media(max-width:900px){.wrap{grid-template-columns:1fr;gap:0}}
+main{min-width:0;padding:28px 0 40px}aside{padding:28px 0 60px}
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 130px);max-height:calc(100vh - 160px);overflow:auto;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px}
+@media(max-width:900px){.side{position:static;max-height:none}}
+.side h4{margin:0 0 8px;font:800 16px system-ui,sans-serif}.side details{border-top:1px solid var(--bd);padding:8px 0}.side summary{cursor:pointer;font:600 14px/1.4 system-ui,sans-serif}
+.side a{display:block;font:14px/1.35 system-ui,sans-serif;padding:5px 0 5px 10px;color:var(--tx);cursor:pointer}.side a:hover,.side a.on{color:var(--ac)}
+.tabs{max-width:1180px;margin:auto;padding:0 20px 10px;display:flex;gap:6px;overflow-x:auto;font:14px system-ui,sans-serif}.tabs span{padding:6px 14px;border-radius:20px;cursor:pointer;white-space:nowrap}.tabs span.on{background:var(--ac);color:#fff}
+.img{aspect-ratio:16/9;overflow:hidden;border-radius:10px}.img svg{width:100%;height:100%;display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;overflow:hidden;cursor:pointer}.card:hover{border-color:var(--ac)}.card .img{border-radius:0}.card .tx{padding:14px 16px 16px}
+.card h3{font:700 18px/1.3 system-ui,sans-serif;margin:4px 0 6px}.card p{margin:0 0 8px;color:var(--mu);font-size:15px;line-height:1.5}
+.card.big{grid-column:1/-1}.card.big h3{font-size:clamp(24px,4vw,32px)}
+.tag{font:700 12px system-ui,sans-serif;color:var(--ac);text-transform:uppercase;letter-spacing:.07em}
+article .img{margin:14px 0 20px}
+.lbw{max-width:1180px;margin:16px auto 0;padding:0 20px}.lbw .ad,aside .ad{margin:0 0 20px}.ad{margin:22px 0}
+.al{display:block;font:11px system-ui,sans-serif;color:var(--mu);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.ab{border-radius:10px;color:#fff;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;font-family:system-ui,sans-serif}
+.ab b{font-size:12px;opacity:.85;text-transform:uppercase;letter-spacing:.08em}.ab h5{margin:2px 0;font-size:20px;line-height:1.25}.ab p{margin:0;font-size:14px;opacity:.9;line-height:1.4}
+.cta{background:#fff;color:#111;padding:9px 18px;border-radius:22px;font:700 14px system-ui,sans-serif;white-space:nowrap}
+.ad.rect .ab{flex-direction:column;align-items:flex-start;justify-content:flex-end;min-height:250px}
+.grid .ad{margin:0;display:flex;flex-direction:column}.grid .ad .ab{flex:1}
+h2.lh{font:700 13px system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--ac);margin:34px 0 8px}
+.item{display:block;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px 18px;margin:10px 0;cursor:pointer}
+.item:hover{border-color:var(--ac)}.item b{font:700 19px/1.3 system-ui,sans-serif}.item p{margin:4px 0 0;color:var(--mu);font-size:15px;line-height:1.5}
+.meta{font:14px system-ui,sans-serif;color:var(--mu)}
+article h1{font:800 clamp(28px,5vw,40px)/1.2 system-ui,sans-serif;margin:6px 0 8px;letter-spacing:-.5px}
+article h3{font:700 21px system-ui,sans-serif;margin:28px 0 6px}
+article p,article li{margin:10px 0}code{background:var(--tip);padding:1px 6px;border-radius:4px;font:.88em ui-monospace,Menlo,monospace;word-break:break-word}
+.tip{background:var(--tip);border-left:4px solid var(--ac);padding:10px 16px;border-radius:0 8px 8px 0;margin:16px 0}
+.tw{overflow-x:auto;margin:16px 0}table{border-collapse:collapse;width:100%;font:15px/1.45 system-ui,sans-serif}th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left;vertical-align:top}th{background:var(--card)}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:40px;font:15px system-ui,sans-serif}.nav a{color:var(--ac);cursor:pointer}
+.back{color:var(--ac);cursor:pointer;font:15px system-ui,sans-serif}
+.none{color:var(--mu);font-family:system-ui,sans-serif}
+</style></head><body>
+<header><div class="bar"><div class="logo" onclick="go('')">Byte<span>watch</span></div><input id="q" type="search" placeholder="Search articles…" oninput="go(this.value)"></div><nav class="tabs" id="tb"></nav></header>
+<div class="lbw"><div id="lb"></div></div><div class="wrap"><main id="m"></main><aside><div id="ad1"></div><div class="side" id="sd"></div></aside></div>
+<script>
+const L=["Inside the SOC","Network Forensics","Intrusion Defense","Incident Response Playbook","Crisis Response"];
+const S=[
+[0,"Cybersecurity 101: Protecting Systems and Data",`Cybersecurity means protecting computer systems, networks and information from attacks, unauthorized access and misuse.
+Common risks include malware, viruses, worms, Trojans, botnets, ransomware, spyware and the darknet.
+## Important terms
+- Threat: Something that could cause harm to a system or its information.
+- Vulnerability: A weakness that an attacker could exploit.
+- Exploit: A method or piece of code used to take advantage of a vulnerability.
+- Patch: An update that fixes a vulnerability or other software problem.
+- Impact: The damage an incident could cause, such as data loss, service disruption or reputational damage.
+## The vulnerability timeline
+A vulnerability moves through stages such as discovery, exploitation, disclosure, patch availability and patch installation. Discovering a vulnerability does not mean it has been fixed. There can be a period when a weakness is known or actively exploited but a patch has not yet been installed.
+> Example: A company knows its server has a vulnerability, but it has not installed the available patch. What is the main concern? The server may remain exploitable until it is properly patched.`],
+[0,"Know Your Enemy: Malware, Worms, Trojans and More",`The most important skill is recognizing a threat from its behavior, not just memorizing its name.
+- Malware: Malicious software designed to perform harmful or unauthorized actions. The broad category that includes viruses, worms, Trojans, ransomware and spyware.
+- Virus: Malicious code that attaches itself to a file or program and spreads when the infected content is executed. Tip: an infected file or program.
+- Worm: Malware that can spread independently between systems, often across a network. Tip: self-spreading from one computer to others.
+- Trojan horse: Malware disguised as legitimate or useful software to persuade someone to run it. Tip: a seemingly legitimate application that hides malicious behavior.
+- Ransomware: Malware that blocks access to files or systems, commonly by encrypting files, and demands payment. Tip: files become inaccessible and a ransom is demanded.
+- Spyware: Software that secretly monitors activity or collects information. Tip: hidden surveillance or information collection.
+- Botnet: A group of compromised devices controlled by an attacker, often through command-and-control infrastructure. Tip: many infected devices being coordinated by one attacker.
+The botnet diagram shows an attacker using a control server to coordinate compromised devices, which then send attack traffic toward a victim.
+## The differences you must know
+| If the scenario describes… | Think of…
+| Malicious code attached to a file | Virus
+| Malware spreading independently | Worm
+| Malicious software pretending to be legitimate | Trojan
+| Files encrypted and payment demanded | Ransomware
+| Secret monitoring or data collection | Spyware
+| Many compromised devices under common control | Botnet
+> Common exam trap: A worm and a virus can both spread malware, but the defining distinction is that a worm can spread independently, whereas a virus attaches itself to a host file or program.
+## What about the darknet?
+The darknet is a part of the internet accessed through specialized software or networks. It is not itself a type of malicious software. Some areas are used for illegal activity, while others support legitimate privacy-related purposes.`],
+[0,"Inside the Security Operations Center",`A Security Operations Center (SOC) is a team or function that continuously monitors an organization’s security, investigates suspicious activity and helps respond to cybersecurity incidents.
+A SOC is defined through three connected elements:
+- People: Security analysts, incident responders, threat hunters, engineers and managers who perform the work.
+- Processes: The procedures and standards that guide the team so important steps are not missed.
+- Technology: Tools used to monitor activity, detect threats, analyze evidence and respond.
+Imagine a company buys an advanced security tool but has no trained analysts and no clear process for responding to alerts. The tool alone cannot guarantee effective security.
+> Exam takeaway: An effective SOC requires coordination between people, processes and technology—not technology alone.`],
+[0,"Four Ways to Build a SOC",`There are four SOC models.
+| SOC model | Simple meaning | Scenario clue
+| Internal / in-house | The organization runs its own security team. | The company hires and manages its own analysts.
+| Virtual | The team works remotely without a dedicated physical SOC facility. | Analysts monitor systems from different locations.
+| Co-managed | Internal staff work with an external managed security provider (MSSP). | The company’s team shares SOC responsibilities with a provider.
+| Centralized | A senior-level group oversees smaller SOCs across a wider region. | A central team coordinates multiple regional SOCs.
+## How to avoid mixing them up
+- Internal vs. co-managed: Is an external provider sharing the work? If yes, co-managed.
+- Virtual vs. internal: Virtual describes how the team operates physically; internal describes who runs the team. These terms are not necessarily opposites.
+- Centralized: Look for a senior team overseeing smaller SOCs, rather than simply a company using one security room.
+A company can run its own SOC remotely, so “internal” and “virtual” describe different aspects of the setup.`],
+[0,"Who Does What in a Security Team",`A scenario may describe a person’s actions and ask you to identify their role. Match the main responsibility to the job title rather than relying on the title alone.
+| Role | Main responsibility | Recognize it when…
+| SOC Analyst | Reviews alerts, investigates suspicious activity and escalates when needed. | Someone investigates a SIEM alert and decides whether it is genuine.
+| Incident Responder | Assesses a security incident and helps coordinate the response. | Someone helps organize the response to a suspected breach.
+| Threat Hunter | Proactively searches for threats that ordinary defenses may miss. | Someone investigates unusual patterns even without a clear alert.
+| Security Engineer | Maintains security infrastructure and integrations. | Someone connects SIEM and SOAR or maintains the security tools.
+| SOC Manager | Handles planning, budgeting, personnel and operational coordination. | Someone manages staffing and the SOC’s budget.
+## SOC Analyst Levels 1, 2 and 3
+SOC analysts are commonly categorized as Levels 1, 2 and 3, and analysts classify alerts, investigate root causes and recommend remedial actions. Analysts may escalate issues to more senior colleagues when needed. However, there is no universal list of duties for each level, so don’t rely on an exact Level 1/2/3 task list.`],
+[0,"The Security Toolbox: SIEM, EDR, SOAR and Beyond",`Several tools may work together, but they do not all do the same job.
+## SIEM — Security Information and Event Management
+A SIEM collects and centralizes security events and logs from different sources, analyzes them and generates alerts about suspicious activity. Example: a user enters 20 incorrect passwords in just 10 seconds. A SIEM rule can flag this behavior because it exceeds a predefined threshold. Think of a SIEM as the central place where security information is brought together and analyzed.
+- Collecting information from different sources.
+- Filtering and analyzing events.
+- Correlating information and generating alerts.
+- Integrating threat intelligence.
+- Supporting compliance reporting.
+- Standardizing data so events can be compared more easily.
+## EDR — Endpoint Detection and Response
+An endpoint is a device such as a computer or server. EDR monitors endpoint activity and collects endpoint data to help detect and investigate threats. It can also support automated responses. Think of EDR as security monitoring focused on individual devices.
+## SOAR — Security Orchestration, Automation and Response
+SOAR helps security products work together and automates tasks that analysts might otherwise perform manually. It supports incident-response playbooks and the orchestration of tools such as firewalls, email servers and access management. Think of SOAR as the coordinator and automation layer.
+## UEBA — User and Entity Behavior Analytics
+UEBA builds a baseline of typical user or entity behavior and uses analytics, including machine learning, to identify deviations. Example: An employee who normally accesses a small number of files suddenly accesses an unusual volume of sensitive information at an unusual time. UEBA can help detect zero-day threats and insider risks even when activity does not match known attack signatures.
+## Log management
+Log management helps analysts access, organize and examine logs in a particular environment, for example to check whether a device communicated with a particular address and to inspect the details of that communication.
+## Threat intelligence
+Threat intelligence provides information about known or suspected threats, such as feeds containing malware hashes and command-and-control domain names or IP addresses. A SOC can use these indicators to investigate whether its own systems are communicating with suspicious destinations. Do not rely on only one threat-intelligence website or one quick sandbox analysis. Some malware may avoid activating in a sandbox or delay its activity.
+## The tools at a glance
+| Tool | Main job
+| SIEM | Centralizes and analyzes events; generates alerts.
+| EDR | Monitors and helps investigate endpoint activity.
+| SOAR | Coordinates tools and automates response workflows.
+| UEBA | Identifies unusual user or entity behavior.
+| Log management | Makes logs accessible and easier to investigate.
+| Threat intelligence | Supplies information and indicators about threats.
+These functions can overlap in real products. Focus on the primary purpose of each tool.`],
+[0,"The Skills Every Security Analyst Needs",`- Operating systems: Understand normal Windows and Linux behavior so you can recognize suspicious activity.
+- Networking: Understand IP addresses, URLs and network communication so you can identify suspicious connections or possible data leaks.
+- Malware analysis: Understand malicious software and investigate its behavior, including whether devices are communicating with its command-and-control infrastructure.
+## Why does understanding normal behavior matter?
+If you don’t know what normal activity looks like, it is difficult to decide whether an event is suspicious. This is especially important for anomaly-based detection and UEBA. For example, a server making hundreds of connections might be normal for that server—or it might indicate a problem. The analyst needs context before drawing a conclusion.`],
+[0,"From Alert to Response: A Walkthrough",`A company’s SIEM raises an alert because one employee account has attempted 20 incorrect passwords in 10 seconds. An analyst investigates the alert. The endpoint tool shows suspicious activity on the employee’s computer. The team finds that the computer has communicated with an IP address listed in a threat-intelligence feed.
+- SIEM: Raises the alert based on the repeated failed logins.
+- SOC Analyst: Investigates whether the alert represents a real threat.
+- EDR: Provides endpoint activity that helps the analyst investigate the computer.
+- Threat Intelligence: Helps determine whether the destination IP is associated with a known threat.
+- Incident Responder: Helps coordinate the response if the incident is confirmed.
+- SOAR: May automate appropriate response steps through an established workflow.
+No single tool proves everything. The analyst combines evidence from different sources to reach a better-supported conclusion.`],
+[0,"Seven Common Security Mix-Ups",`- Calling every malicious program a virus. Malware is the broader category; worms, Trojans and ransomware have distinct characteristics.
+- Confusing SIEM with EDR. SIEM brings together security events from multiple sources; EDR focuses on endpoint activity.
+- Confusing SIEM with SOAR. SIEM primarily analyzes and alerts; SOAR coordinates and automates workflows.
+- Confusing threat hunting with alert triage. Analysts investigate alerts; threat hunters proactively look for threats that may have escaped normal detection.
+- Assuming an alert proves an attack occurred. An alert indicates suspicious activity that needs investigation.
+- Relying on one threat-intelligence source. This is risky.
+- Confusing SOC models. Internal means the organization runs its own team; virtual means the team works remotely; co-managed means internal and external teams work together; centralized means a senior group oversees smaller SOCs.`],
+
+[1,"Packet Capture: Recording What Crosses the Wire",`A packet is a unit of data sent across a network. When devices communicate, their information is transmitted in packets. Packet capture means intercepting and recording packets as they travel through a network so they can be examined later.
+Packet capture can help with:
+- Identifying potential security threats.
+- Troubleshooting unusual network behavior.
+- Identifying network congestion.
+- Investigating lost packets.
+- Performing network forensic analysis.
+Example: A computer is repeatedly connecting to an unfamiliar server. A security analyst captures network traffic and examines the packets to determine which devices are communicating and what protocols are being used. The capture provides evidence to investigate. It does not automatically prove that the communication is malicious.
+## Two ways to capture traffic
+- Inline: The capture device is placed directly in the traffic path.
+- From a copy of the traffic: A network switch sends a copy of traffic to a capture device. This allows traffic to be observed without necessarily placing the capture device directly in the communication path.
+> Tip: If a question asks why packet capture is useful, think about observing communications to troubleshoot, detect suspicious activity or investigate what happened.`],
+[1,"Meet Wireshark, the Free Network Analyzer",`Wireshark is a free, open-source network packet analyzer. It lets you capture network traffic and inspect the contents and structure of packets. Its uses: network troubleshooting, analysis, protocol development and education. TShark is the terminal-based version of Wireshark.
+| Tool | Main purpose
+| Wireshark | Analyzes network packets using a graphical interface.
+| TShark | Performs packet analysis from the command line.
+| tcpdump | Another packet-capture and analysis tool, commonly used from the command line.
+Wireshark offers a graphical interface with integrated sorting and filtering. TShark is useful when you want to work from a terminal or automate command-line analysis.`],
+[1,"Anatomy of the Wireshark Window",`Remember the order: list → details → bytes.
+- Packet List: Shows the captured packets in rows, including information such as time, source, destination and protocol. Question clue: “Which packets were captured?”
+- Packet Details: Shows the selected packet’s protocol fields and structured information, such as Ethernet, IP and TCP details. Question clue: “What are the fields and values inside this packet?”
+- Packet Bytes: Shows the packet’s raw bytes, commonly displayed in hexadecimal and an accompanying text representation where possible. Question clue: “What do the packet’s raw bytes look like?”
+When you select a packet in the first panel, the other two panels show information about that selected packet.`],
+[1,"Capture vs. Display Filters: A Practical Comparison",`This is one of the most important distinctions because exam questions can give you a filter and ask what it does.
+## Capture filters
+A capture filter decides which packets Wireshark collects in the first place. Think: What traffic do I want to record?
+| Filter | Meaning
+| host 192.168.1.10 | Capture traffic to or from that host.
+| dst host 192.168.1.10 | Capture traffic sent to that destination host.
+| net 192.168.0.0/24 | Capture traffic associated with that subnet.
+| port 53 | Capture traffic using port 53, commonly used by DNS.
+| port not 53 and not arp | Exclude traffic on port 53 and ARP traffic.
+These examples use capture-filter syntax, which differs from display-filter syntax.
+## Display filters
+A display filter hides packets from the current view when they don’t match the expression. The packets were already captured; the filter changes what you see. Think: I have recorded traffic. Which packets do I want to inspect?
+| Filter | Meaning
+| ip.src == 192.168.1.10 | Show packets whose source IP is this address.
+| ip.dst == 192.168.1.10 | Show packets whose destination IP is this address.
+| tcp.port eq 25 | Show TCP packets using port 25.
+| icmp | Show ICMP traffic, often associated with ping.
+| ip.addr != 192.168.1.10 | Show packets whose source and destination IP addresses do not match this address.
+The last example needs care: ip.addr can match either the source or destination IP field. If the intention is to exclude every packet going to or from one host, check the expression’s exact behavior rather than assuming != means “neither endpoint is this address.”
+## The difference in one example
+Imagine you want to investigate DNS traffic. If you use the capture filter port 53, you record only traffic using that port. If you capture everything and then apply the display filter dns, you display only packets Wireshark identifies as DNS.
+> Memory trick: Capture filter = what gets recorded. Display filter = what gets shown. A display filter cannot bring back packets that were never captured.`],
+[1,"Reading Filter Logic: AND, OR and Grouping",`- && means AND: both conditions must be true.
+- || means OR: at least one condition must be true.
+- Parentheses group conditions so you can see which tests belong together.
+\`ip.src == 10.0.0.5 && dns\` asks Wireshark to display packets that have source IP 10.0.0.5 and are identified as DNS.
+\`ip.src == 10.0.0.5 || dns\` displays packets that match either condition: packets from that source IP, or DNS packets.
+> Common mistake: Reading AND as “either one.” With AND, both conditions must match. With OR, either condition can match.`],
+[1,"Wireshark and TShark Commands, Decoded",`You don’t need to memorize every possible command, but you should be able to break a command into pieces.
+## Command A — capture for three minutes
+\`wireshark -i eth0 -k -a duration:180 -w capture180.pcapng\`
+- wireshark: Launch Wireshark.
+- -i eth0: Use interface eth0.
+- -k: Start capturing immediately.
+- -a duration:180: Stop automatically after 180 seconds.
+- -w capture180.pcapng: Write the captured packets to that file.
+If the exam asks what the command does: It starts a capture on eth0, runs it for 180 seconds and saves the result as capture180.pcapng.
+## Command B — open an existing capture and filter it
+\`wireshark -r traffic.pcapng -Y "dns"\`
+- -r traffic.pcapng: Read an existing capture file.
+- -Y "dns": Apply a display filter to show DNS traffic.
+The crucial distinction is -r: this command reads an existing file rather than starting a new live capture.
+## Command C — summarize TCP conversations
+\`tshark -r traffic.pcap -q -z conv,tcp\`
+- tshark: Use the terminal-based packet analyzer.
+- -r traffic.pcap: Read the specified capture file.
+- -q: Suppress the usual per-packet output.
+- -z conv,tcp: Display TCP conversation statistics.
+A TCP conversation summary helps you examine communication between endpoints rather than inspecting every packet individually.
+## Command D — a more complex exam-style filter
+\`(ip.src == 10.0.0.5 && tls.record.content_type == 23) || dns\`
+1. ip.src == 10.0.0.5 — the packet’s source IP must be 10.0.0.5.
+2. tls.record.content_type == 23 — the TLS record content type is 23, which denotes application data.
+3. && — both of those conditions must be satisfied for that grouped part.
+4. || dns — DNS packets also match, even if they do not satisfy the first two conditions.
+So the filter displays either packets from 10.0.0.5 that match the specified TLS record condition or DNS packets.`],
+[1,"Tuning Captures and Reading Statistics",`## Controlling a capture
+Wireshark can be configured to stop capturing based on:
+- Time: Stop after a specified duration.
+- File size: Stop or manage files according to a size limit.
+- Packet count: Stop after a specified number of packets.
+Captures can also be split captures into multiple files rather than saved as one large file.
+## Reading capture statistics
+The Statistics menu can show general information about a capture, including its duration, packet counts, captured bytes and traffic rates.
+> Tip: If asked how to get an overview of an existing capture, look for capture-file properties or the Statistics menu, rather than examining every packet individually.`],
+[1,"Spotting Credentials in HTTP Traffic",`The workflow for investigating a web login in a packet capture:
+1. Capture traffic while performing a test login using fake credentials.
+2. Apply a display filter to narrow the results to HTTP POST requests.
+3. Right-click a relevant packet and choose Follow → HTTP Stream.
+4. Inspect the reconstructed HTTP conversation for the information sent in the request.
+A useful display filter: \`http.request.method=="POST"\` which shows HTTP requests whose method is POST.
+## What is a POST request?
+An HTTP POST request commonly sends information to a server—for example, form data submitted when a user logs in. However, not every POST request contains credentials.
+## Why encryption matters
+The demonstration shows credentials visible in a captured HTTP request. This is possible when the credentials are sent over unencrypted HTTP. With properly encrypted HTTPS/TLS traffic, a packet capture generally does not reveal the login credentials as readable application data without access to the appropriate decryption material.
+> Takeaway: A POST filter narrows the search, but it doesn’t prove a packet contains a password. You still need to inspect the relevant traffic, and encryption affects what you can read.`],
+[1,"Investigating a Suspected Data Leak, Step by Step",`Suppose an analyst receives a capture file after a suspected data leak. They need to determine which computer sent traffic to a particular address, identify relevant web requests and investigate whether sensitive information was transmitted.
+1. Read the existing file rather than starting a new capture, if the evidence is already available.
+2. Use display filters to narrow the packets to the source, destination or protocol of interest.
+3. Inspect packet details to understand the protocol fields and endpoints.
+4. Follow the relevant stream when reconstructing a supported application conversation would help.
+5. Interpret the evidence carefully. A suspicious address or request is a reason to investigate, not automatic proof of a data breach.`],
+
+[2,"What an Intrusion Detection System Actually Does",`An Intrusion Detection System (IDS) is a device or software application that monitors network traffic or computer systems for suspicious activity, malicious behavior or violations of security policies. When it detects something suspicious, it typically generates an alert for a security administrator or sends information to a SIEM for further analysis.
+Example: A company’s server receives hundreds of unusual connection attempts. An IDS detects the suspicious pattern and alerts the security team. The IDS has detected and reported a potential threat. That does not automatically mean it has blocked the traffic.
+## Why organizations use IDS
+- Early detection and reporting of potential attacks.
+- Monitoring for suspicious activity, including possible insider threats.
+- Providing logs that can support investigations after an incident.
+- Detecting violations of security policies.
+- Helping organizations meet applicable regulatory requirements.
+- Potentially identifying unknown attacks through anomaly detection.
+- Helping reduce the risk of downtime by detecting threats early.
+> Exam tip: If a question describes a system that monitors traffic and alerts an administrator, think IDS.`],
+[2,"IDS vs. IPS: Detect or Block?",`- IDS — Detection: Monitors, detects and alerts. It is commonly deployed passively, such as through a network tap or a switch port mirror. It can identify suspicious traffic without directly blocking it.
+- IPS — Prevention: Detects and can actively block or stop threats. It is commonly deployed inline, allowing it to inspect traffic as it passes through and drop malicious packets.
+| Feature | IDS | IPS
+| Monitors traffic | Yes | Yes
+| Detects suspicious activity | Yes | Yes
+| Generates alerts or logs | Yes | Yes
+| Can actively block traffic | Not typically | Yes
+| Common deployment | Passive | Inline
+## Scenario: which one is it?
+A security appliance identifies a malicious packet and immediately drops it before it reaches the internal server. Answer: IPS, because it actively blocks the packet. If the appliance only sends an alert and leaves the traffic to be handled separately, the best answer is IDS.
+Some IDS products can have response capabilities, but systems with prevention capabilities are typically referred to as IPS. For exam questions, focus on whether the described system actively blocks traffic.`],
+[2,"Network vs. Host Monitoring: NIDS and HIDS",`The key difference is where the system monitors activity.
+- NIDS — Network Intrusion Detection System: Monitors network traffic flowing between devices. It is usually positioned at a strategic network point to observe significant amounts of traffic. Scenario clue: The organization wants to monitor packets entering and leaving a network segment.
+- HIDS — Host Intrusion Detection System: Runs on an individual computer or server. It can monitor activity on that device, including system configuration and file integrity. Scenario clue: A security tool detects that a protected system file on one server has unexpectedly changed.
+| Question clue | Correct concept
+| Monitoring packets across a network | NIDS
+| Monitoring files on one server | HIDS
+| Detecting suspicious traffic between devices | NIDS
+| Checking changes to a host’s system configuration | HIDS
+Memory trick: Network = many devices communicating; Host = an individual device. A HIDS can observe activity that a network-only sensor might not reveal, while a NIDS can give broader visibility into communications between systems.`],
+[2,"How Detection Works: Signatures, Anomalies and Protocols",`This is a major exam topic.
+## A. Signature-based detection
+Looks for known patterns of malicious activity. A signature could represent a known byte sequence, a recognizable attack pattern or a known malicious instruction sequence. Example: The IDS has a rule that recognizes a known malware pattern. When the matching pattern appears in network traffic, it raises an alert.
+- Strengths: Effective at detecting attacks with known signatures. Typically produces fewer false positives when signatures are well designed.
+- Weaknesses: Can miss new or unknown attacks that do not match existing signatures. Signatures need to be updated as new threats are discovered.
+> Tip: “Matches a known attack pattern” → signature-based detection.
+## B. Anomaly-based detection
+First establishes a baseline of normal activity. It then compares new activity against that baseline and flags unusual deviations. Example: A network normally transfers small amounts of data overnight. Suddenly, one computer transfers a very large amount of data at 3 a.m. The IDS flags the unusual behavior.
+- Strengths: Can identify new or previously unknown attacks. Does not require every attack to match a known signature.
+- Weaknesses: Legitimate unusual behavior may trigger an alert. Establishing and tuning a good baseline can be difficult.
+> Tip: “Learns normal behavior, then detects deviations” → anomaly-based detection.
+## C. Protocol-behavior detection
+Also called stateful protocol analysis. Compares observed protocol activity with expected or accepted protocol behavior. The rules may be based on protocol specifications. Example: A packet sequence violates the expected behavior of a network protocol. The system flags it, even if the sequence does not match a known malware signature. Limitation: Nonstandard traffic is not automatically malicious. A poorly coded application can also violate protocol expectations.
+> Tip: “Does not follow the protocol’s expected operation” → protocol-behavior detection.
+## Comparison table
+| Feature | Signature-based | Anomaly-based | Protocol-behavior
+| Main idea | Match known attack patterns | Compare against normal baseline | Compare against expected protocol behavior
+| Requires known attack signature? | Yes, for that pattern to match | No | No specific attack signature required
+| Requires a normal baseline? | No | Yes | Not necessarily
+| Good for unknown threats? | Limited | Often better | Can detect protocol violations, but not necessarily all new attacks
+| Main limitation | May miss new attacks | Can flag legitimate unusual activity | Legitimate software can also violate expected protocol behavior
+Which IDS is best at detecting new security threats. Its answer is anomaly-detection IDS, because it can identify deviations without requiring a known signature. It also emphasizes its higher false-positive rate.
+## What about hybrid detection?
+A hybrid IDS combines multiple detection approaches, such as signature-based and anomaly-based detection. One can recognize known attacks while another flags unusual behavior that may not match a known signature.`],
+[2,"False Alarms and Missed Attacks Explained",`A false positive occurs when normal traffic is incorrectly identified as malicious. A false negative occurs when an actual intrusion is missed.
+- False positive: Normal activity is flagged as an attack. Example: An IPS blocks a legitimate customer from accessing a website because it mistakenly classifies the customer’s traffic as malicious.
+- False negative: An actual attack is missed. Example: An attacker sends malicious traffic, but the IDS does not recognize it and raises no alert.
+- True positive: An actual threat is correctly identified. Example: The IDS correctly recognizes malicious traffic and generates an alert.
+- True negative: Normal activity is correctly treated as harmless. Example: A legitimate request to a web server is correctly allowed or classified as benign.
+## A simple way to remember
+False positive: False alarm. False negative: Missed attack. True positive: Correctly detected attack. True negative: Correctly recognized normal activity.
+## What is tuning?
+Tuning means adjusting detection rules, thresholds or baselines to improve detection quality. The goal is to reduce false alarms without allowing more real attacks to slip through unnoticed. Too many false positives can overwhelm both the security device and the administrator who must review them.
+> Exam example: An IDS generates hundreds of alerts every day, most of which are legitimate traffic. What should the team consider? Answer: Tuning the detection rules or baseline to reduce false positives while maintaining effective detection.`],
+[2,"Firewalls vs. Intrusion Detection",`A firewall controls which network connections are permitted or denied according to its rules. An IDS monitors activity to detect and report suspicious behavior.
+| Situation | Best answer
+| A device blocks connections that violate access rules | Firewall
+| A system detects suspicious traffic and alerts an analyst | IDS
+| A system detects and actively blocks malicious packets | IPS
+| A system monitors an individual server’s file integrity | HIDS
+## Stateful vs. stateless firewalls
+- Stateless firewall: Evaluates packets individually against its rules, without maintaining the state of each connection.
+- Stateful firewall: Tracks active sessions and can allow return traffic that belongs to a connection initiated from inside the network.
+Example: A computer initiates a legitimate connection to a website. A stateful firewall records the session and allows the corresponding response traffic. Unsolicited inbound traffic that does not match an allowed session can be blocked.
+> Tip: “Tracks the state of each session” → stateful firewall.
+Do not confuse this with a proxy firewall. A proxy firewall terminates one connection and creates another, while NAT translates addresses. Those are different functions.`],
+[2,"A Guide to Intrusion Prevention Categories",`Know what each one monitors.
+| Category | Main purpose
+| NIPS — Network-based IPS | Monitors network traffic and can block suspicious traffic.
+| WIPS — Wireless IPS | Monitors wireless networks for suspicious activity.
+| NBA — Network Behavior Analysis | Examines traffic patterns to identify unusual flows, such as those associated with DDoS attacks.
+| HIPS — Host-based IPS | Runs on an individual host and monitors activity on that device.
+The key distinction is whether the system focuses on a network, wireless traffic, traffic behavior or an individual host.`],
+[2,"Honeypots: Decoys That Catch Attackers",`A honeypot is a system or resource designed to attract attackers so their activity can be observed and characterized. For example, an organization might set up a deliberately exposed test service. If someone attempts to exploit it, the security team can observe the techniques and traffic involved.
+> Tip: If the question describes a decoy system used to observe attackers, think honeypot.
+A honeypot is not a replacement for a firewall or IDS. It serves a different purpose: gathering information about attacker behavior.`],
+[2,"Snort vs. Wireshark: Two Tools Compared",`Snort is a network intrusion detection tool that can inspect traffic and use rules to identify suspicious patterns. Depending on configuration, Snort can also operate in prevention mode. Wireshark is primarily a packet analyzer for inspecting and investigating network traffic.
+| Feature | Wireshark | Snort
+| Main purpose | Detailed packet analysis | Rule-based network threat detection
+| Packet inspection | Yes | Yes
+| Built-in intrusion detection rules | Not its primary purpose | Yes
+| Typical use | Investigating a specific packet or conversation | Detecting patterns across network traffic
+| Active blocking | Not designed to block traffic | Possible when configured for prevention
+Wireshark offers detailed packet-level visibility but generally requires manual analysis; Snort is designed for more automated rule-based detection.
+## A basic Snort rule
+\`alert tcp any any -> 192.168.1.10 80 (msg:"Example alert"; sid:1000001; rev:1;)\`
+- alert — generate an alert when the rule matches.
+- tcp — inspect TCP traffic.
+- any any — any source IP address and source port.
+- -> — traffic moving from the source toward the destination.
+- 192.168.1.10 80 — destination IP and port.
+- msg:"Example alert" — the message displayed with the alert.
+- sid:1000001 — the rule’s identifier.
+- rev:1 — the rule revision number.
+The rule is an illustrative example of Snort rule structure. It does not inspect a specific HTTP path or Host header, because those conditions are not present.
+> Exam tip: Read the header first to understand the protocol, source, direction and destination. Then read the options to determine what additional conditions or actions are specified.`],
+[2,"How to Recognize Scans, Floods and Interception",`- Port scanning: A host sends many connection probes to different ports, potentially to discover available services. Traffic clue: Numerous TCP SYN packets directed at multiple ports from one source.
+- Denial of Service (DoS): An attacker attempts to make a service unavailable by overwhelming or disrupting it. Traffic clue: An unusually high volume of traffic, potentially from one or many sources.
+- Man-in-the-Middle (MitM): An attacker interferes with communication between two parties. Traffic clue: Unexpected ARP replies or signs of duplicate IP addresses may indicate ARP spoofing or a related network issue.
+These are clues, not proof on their own.
+## A useful filter
+\`tcp.flags.syn == 1 and tcp.flags.ack == 0\`
+This selects TCP packets with the SYN flag set and the ACK flag unset. Such packets can appear during connection attempts and can help investigate possible SYN scans. However, legitimate TCP connections also begin with SYN packets, so you need to examine the broader traffic pattern.`],
+[2,"Can Machine Learning Catch Intrusions?",`Machine learning can analyze traffic patterns and identify unusual behavior that may be associated with an intrusion. For example, traffic features such as packet sizes, communication frequency and source/destination addresses can be extracted from captured data and supplied to a machine-learning model.
+## Potential benefits
+- Detecting unusual traffic patterns that don’t match known signatures.
+- Supporting the identification of potentially unknown attacks.
+- Helping automate parts of traffic analysis.
+## Limitations
+- Unusual behavior is not necessarily malicious.
+- A model can generate false positives or miss attacks.
+- Performance depends on the data, features and model used.
+Exporting Wireshark data for machine learning is a conceptual workflow, not a guarantee that an ML model will detect every zero-day attack.
+> Tip: If a question describes detecting deviations from normal traffic using learned patterns, anomaly-based detection is the likely answer.`],
+
+[3,"What Incident Response Really Means",`Incident response is the organized process an organization follows to handle a security incident, such as a cyberattack or data breach.
+The main goals are to:
+- Limit damage.
+- Reduce the time and cost needed to recover.
+- Understand what happened.
+- Fix the problem and reduce the chance of it happening again.
+Example: An employee opens a malicious invoice attachment. The computer begins behaving strangely, and files start becoming inaccessible. The organization needs to identify the problem, investigate it, prevent it from spreading, remove the threat, restore affected systems, and learn from the incident. That entire organized process is incident response. It is not just detecting malware or examining evidence.`],
+[3,"The Six Phases of Incident Response",`This is one of the most important things to memorize. The process is a continuous cycle.
+1. Preparation: Get ready before an incident occurs: create plans, train people, prepare tools and practise.
+2. Detection: Notice a possible incident through security alerts, unusual activity or a report from a person.
+3. Analysis: Investigate the evidence to understand what happened, which systems were affected, how the attack occurred and whether information was stolen.
+4. Containment: Limit the damage and stop the incident from spreading, for example by isolating an affected computer or blocking malicious connections.
+5. Eradication and Recovery: Remove the threat, fix the weaknesses that allowed it in, restore affected systems and check that they are safe to use again.
+6. Post-Incident Activity: Document what happened, review what worked and what failed, and improve the response plan for next time.
+## How to tell the phases apart in exam questions
+| If the question describes… | Think…
+| Training the team before an attack | Preparation
+| An alert or employee report reveals a possible attack | Detection
+| Examining logs to discover how the attacker entered | Analysis
+| Disconnecting an infected computer to stop spread | Containment
+| Removing malware and patching the vulnerability | Eradication
+| Restoring clean backups and checking the systems | Recovery
+| Writing the final report and improving the plan | Post-incident activity
+> Important distinction: Analysis is about understanding the incident; containment is about limiting its impact. Eradication removes the threat, while recovery brings systems back into safe operation.
+Eradication and recovery are often grouped together as phase 5, although playbooks list them separately. Both views use the same underlying ideas.`],
+[3,"Incident Response vs. Digital Forensics",`- Incident response: The whole process of handling the incident, limiting damage, fixing problems and restoring operations.
+- Digital forensics: Examining digital evidence to understand what happened and potentially identify who was responsible.
+Example: A company suspects ransomware. Examining logs and evidence to determine how the ransomware entered is part of the investigation and may involve digital forensics. Isolating the infected computer, removing the malware, restoring systems and coordinating the response are also incident response activities.
+> Tip: If a question says digital forensics is the same as incident response, that statement is incorrect.`],
+[3,"Frameworks, Charters, Plans and Playbooks Compared",`These terms sound similar, but they refer to different things.
+- Incident response framework: The overall structure or roadmap for how an organization handles security incidents. It establishes how people, rules and resources work together.
+- Incident response charter: Defines the response team’s purpose and boundaries: who it protects, what its mission is and which services it provides.
+- Incident response plan: The broader planning document explaining how the response capability operates, including roles, contact details, communication, training and maintenance.
+- Incident response playbook: A more specific set of instructions or workflow for handling a particular type of incident.
+## Example: a phishing incident
+- Framework: The organization has an established process for handling security incidents.
+- Charter: The CSIRT is responsible for responding to security incidents affecting the organization’s systems.
+- Plan: The document identifies the people to contact and how the team communicates.
+- Playbook: The phishing procedure explains how to assess the suspicious email, investigate affected systems and respond.
+> Exam tip: If the question asks for a specific, step-by-step workflow for a type of attack, choose playbook. If it asks for the broader document governing how the team operates, choose incident response plan.`],
+[3,"Writing an Incident Response Charter",`Four important parts of the charter:
+1. Obtain senior leadership support. Senior leaders approve and support the response capability so the team has the authority and resources it needs.
+2. Define the constituency. Specify exactly which people, systems, departments or parts of the organization the team is responsible for protecting.
+3. Create a mission statement. Clearly explain the team’s purpose and what it is expected to achieve.
+4. Determine service delivery. Define the services the team will provide.
+Services fall into two categories:
+| Proactive services | Reactive services
+| Security awareness and training | Investigating an incident
+| Monitoring emerging security issues | Helping contain a threat
+| Setting up security tools | Documenting findings and responding to an attack
+Easy way to remember: Proactive means preparing or acting before an incident; reactive means responding when an incident or security problem occurs.`],
+[3,"Meet the Incident Response Team",`CSIRT stands for Computer Security Incident Response Team. It is the team responsible for coordinating and handling security incidents. It is divided into three groups:
+- Core team: The people who directly handle incidents: the incident response coordinator, senior analysts, analysts, SOC analysts and IT security engineers/analysts.
+- Technical support: Specialists who help when an incident affects their area, such as network administrators, server administrators, application support, desktop support and the help desk.
+- Organizational support: People who handle non-technical needs, including legal, HR, communications, facilities and corporate security.
+## Core team roles you should recognize
+| Role | Main responsibility
+| Incident response coordinator | Leads and coordinates the response before, during and after an incident; keeps leadership informed.
+| CSIRT senior analyst | Provides experienced investigation support, guides other analysts and helps document findings.
+| CSIRT analyst | Collects and analyzes evidence and assists with response tasks.
+| SOC analyst | Monitors security activity and can be among the first to identify a possible incident.
+| IT security engineer/analyst | Maintains security tools, checks their configuration and helps gather information from them.
+## Who else might help?
+- Network administrator: Helps investigate unusual router, switch or network activity.
+- Server administrator: Helps gather server logs and investigate suspicious account changes.
+- Application support: Helps investigate attacks involving web applications or vulnerable code.
+- Desktop support: Helps investigate or clean up affected desktop computers.
+- Help desk: May be the first to hear that users are experiencing suspicious problems.
+- Legal: Advises on legal obligations, notifications and potential legal action.
+- HR: Assists when an employee or contractor may be involved.
+- Marketing/communications: Helps prepare clear messages for customers and other audiences.
+- Corporate security: May provide access records, badge logs or camera information in physical security incidents.
+For example, if a breach may require customer notification, legal and communications teams may need to help. If suspicious activity involves a server’s user accounts, the server administrator can provide technical assistance.`],
+[3,"What a Solid Response Plan Contains",`The charter plus these six elements.
+| Element | Why it matters
+| Incident response charter | Keeps the plan aligned with the team’s mission and responsibility.
+| Expanded services catalog | Explains exactly what services the CSIRT provides.
+| CSIRT personnel | Defines each person’s role and duties.
+| Contact list | Identifies whom to contact, including backup or on-call contacts.
+| Internal communication plan | Explains how information and instructions flow between the CSIRT, support teams and leadership.
+| Training | Establishes how the team practises and maintains its skills.
+| Maintenance | Ensures the plan stays up to date as systems, threats and personnel change.
+## Scenario example
+A company experiences a serious incident, but nobody knows whom to contact because the response team’s phone numbers are outdated. The clearest problem is the contact list. The plan should include current contacts and appropriate backups.
+Another company has a response team, but two people both assume the other person is responsible for isolating infected computers. That points to unclear CSIRT personnel roles and responsibilities.
+Run training exercises at least annually and review and update the plan at least once a year.`],
+[3,"How Serious Is It? Classifying Incidents",`Incident classification helps the CSIRT prioritize its response. These are example categories, rather than a universal severity scale for every organization.
+## High
+- Network intrusion.
+- Compromise of critical information.
+- Targeted attacks against IT infrastructure.
+- Widespread, growing malware infection affecting more than 25% of hosts.
+- Phishing attacks using the organization’s domain and branding.
+## Moderate
+- An anticipated or ongoing DoS attack.
+- Misuse of authorized access.
+- Automated intrusion.
+- A confined malware infection.
+- Installation of malicious software.
+- Unusual system performance or behavior.
+## Low
+- Policy or procedural violations.
+- Installation of unauthorized software.
+- Malware infection of a single PC.
+- Loss or theft of a device containing encrypted confidential information.
+## How to answer severity scenarios
+Malware is detected on one computer, and the infection is contained: low-level. Malware spreading rapidly and affecting more than 25% of the organization’s hosts: high-level. The important clue is the scope and impact of the incident, not just the fact that malware exists.
+Note: the PDF has an overlapping example involving lost equipment containing unencrypted confidential information in both its high- and moderate-level lists. Don’t rely on that particular example alone to distinguish severity; use the clearer examples above.`],
+[3,"Why Every Incident Needs a Tracking Record",`Incident tracking means recording the incident and the actions taken to handle it. Each incident should have its own unique number. The record should document what the CSIRT and other people do during the response.
+## Why is it important?
+- The team can follow the progress of the incident.
+- People can see which actions have already been taken.
+- The organization has a record to review after the incident.
+- The team can support reporting and future improvements.
+> Tip: If the question asks how the CSIRT keeps incidents organized and tracks actions, think incident tracking.`],
+[3,"Playbooks: Step-by-Step Workflows for Attacks",`A playbook gives the team a practical workflow for a particular kind of incident. Instead of improvising during a crisis, responders follow predefined steps.
+The diagram shows a malware-related workflow: an alert or phishing report leads to identifying affected hosts, analyzing logs, malware, network traffic and memory, then containing the threat, removing infected hosts, patching vulnerabilities, monitoring for anomalies and documenting lessons learned. It shows how the phases connect in a real incident rather than existing as isolated definitions.
+## Playbook vs. incident response plan
+- Plan: The overall document that establishes how incident response is organized.
+- Playbook: The more specific workflow used for a particular incident type.
+Create playbooks that cover a range of potential incidents.`],
+[3,"When to Escalate a Security Event",`Escalation procedures explain when a possible security problem needs to be passed to the CSIRT or brought to more senior specialists. Not every unusual event is automatically a confirmed incident. The team needs a process for deciding what requires further investigation and who should become involved.
+Example:
+1. The help desk receives several reports of suspicious computer behavior.
+2. It follows the escalation procedure and contacts the on-call CSIRT member if it cannot resolve the issue.
+3. The CSIRT member assesses the situation and investigates.
+4. If the problem is more complex, additional technical specialists are involved.
+5. If the incident is serious, the response may expand to include leadership, legal and communications personnel.
+> Tip: “Who decides when an unusual event becomes an incident?” → Escalation procedures help define the responsibility.
+> Tip: “A help desk cannot resolve a suspected malware problem. What happens next?” → Escalate to the appropriate CSIRT contact.
+> Tip: “A serious incident requires legal and communications support.” → Escalate and involve the relevant organizational support personnel.`],
+[3,"Stress-Testing Your Response Plan",`Having a plan is not enough. The organization must practise and test it.
+- Create the incident response plan and playbooks.
+- Conduct a tabletop exercise, where participants discuss how they would respond to a simulated incident.
+- Document gaps and report the findings to leadership.
+- Conduct more advanced exercises as the team develops.
+- Continue training and review the plan annually.
+> Tip: If the team discusses a simulated attack to find weaknesses in its response plan, the answer is a tabletop exercise.`],
+
+[4,"Bringing the Response Team Together",`Four important components of engaging the CSIRT (Computer Security Incident Response Team):
+- CSIRT model: How the team fits into the organization’s structure and how incidents reach it.
+- War room: The place or working environment from which the team manages the incident.
+- Communications: How the team shares information securely and clearly.
+- Staff rotation: How the team avoids exhaustion during prolonged incidents.
+Responding to an incident isn’t just about technical skills. The right people must be involved, information must reach them quickly, and they must be able to work effectively for as long as the incident lasts.`],
+[4,"How the SOC Hands Off to Incident Responders",`- SOC (Security Operations Center): Monitors security activity and identifies suspicious events.
+- CSIRT: Coordinates the response to security incidents.
+A SOC analyst might spot an alert, but the team must determine whether it is a genuine incident and whether specialist incident responders need to be involved.
+## The escalation diagram
+1. A security incident reaches a Tier 1 SOC analyst.
+2. The SOC manager escalates it to the CSIRT manager.
+3. The CSIRT manager involves Tier 2 and/or Tier 3 incident response analysts.
+Four possible problems with this arrangement:
+- Several people may handle the incident before the CSIRT is fully engaged.
+- Poorly documented escalation means responders must ask for missing details, wasting time.
+- SOC analysts need training to distinguish genuine incidents from false positives.
+- Poor communication between the SOC and CSIRT causes confusion and delays.
+> Exam example: A Tier 1 analyst sends an alert to the response team but includes no affected IP address, timestamps or investigation notes. The CSIRT must chase the SOC for information. The problem is not simply a lack of technical skill. It’s inadequate incident documentation and escalation.`],
+[4,"Three Ways to Organize a Response Team",`The important thing is to understand where incident response sits in the organization and how the incident moves through the team.
+- A. SOC escalation model: The SOC handles initial monitoring and triage, then escalates incidents to the CSIRT through the managers. The CSIRT’s specialist analysts investigate and respond. Remember: SOC first, CSIRT escalation afterward.
+- B. Combined SOC and CSIRT: The SOC and incident response functions are more closely integrated. A CSIRT manager oversees analysts at different tiers, with Tier 1 handling initial security incidents and escalation to more advanced analysts. Remember: Monitoring and response functions are brought closer together.
+- C. CSIRT fusion center: A fusion center director oversees both a CSIRT manager and a threat intelligence manager. Incident response analysts and threat intelligence analysts work under their respective managers. Remember: Incident response and threat intelligence are brought together under shared leadership.
+You don’t need to assume that one structure is always best. The model should be tailored to the organization’s structure and available resources.`],
+[4,"Setting Up an Incident War Room",`A war room is the location or coordinated working environment where the CSIRT manages an incident. It helps the team share information and coordinate its work. It should support:
+- Workspaces: Each core team member needs a suitable place to analyze information, with network access, power and monitors.
+- Team displays: Shared screens help everyone see the same analysis results.
+- Note sharing: Collaboration tools help geographically separated teams share notes.
+- Whiteboards: Useful for tracking assigned tasks and lists of compromised systems.
+- Limited access: Only people with a legitimate need should enter, reducing the risk of sensitive information leaking.
+Scenario: During a ransomware incident, an employee who isn’t involved in the response walks into the war room and reads the list of compromised servers and the team’s containment strategy. The issue is inadequate access control. The war room should be restricted to authorized personnel.`],
+[4,"Communicating Securely During a Breach",`Suppose attackers compromise the organization’s cloud email account. If the response team continues discussing its investigation through that same email platform, the attackers might see the response plans. Use an alternative communication method when normal channels may be compromised. Examples given: commercial cell phones and temporary collaboration tools.
+## Internal, external and public communications
+- Internal communication: Communication within the organization, including the CSIRT, senior leadership and relevant departments. The incident commander or CSIRT lead should act as the main point of contact. Legal can determine reporting and regulatory requirements. HR may need to be involved if employees are affected. Communications staff help prepare messages. Leadership should receive regular updates.
+- External communication: Communication with affected suppliers, customers, service providers and other connected organizations. If a compromised supplier or managed service provider shares network access with the affected company, the company may need to notify it quickly and temporarily disconnect shared connections.
+- Public notification: Communication with customers, the public or the media. The CSIRT should provide technical information, while legal and marketing/communications teams should lead the preparation of public statements and media responses.
+## What about GDPR’s 72-hour requirement?
+GDPR Article 33 sets a 72-hour breach notification requirement. In actual situations, the legal reporting obligation depends on the circumstances and applicable rules; don’t read this as saying every security incident automatically requires public notification within 72 hours.
+> Exam scenario: A company discovers that attackers have compromised its email platform. The CSIRT needs to share sensitive investigation details. The best response is to use a secure alternative communication channel if the usual platform may be compromised.
+> Another scenario: customer-facing statements are required. The CSIRT supplies the facts, but legal and communications/marketing should lead the public messaging.`],
+[4,"Preventing Responder Burnout in Long Incidents",`A serious incident may last for days. Continuously working without rest can harm responders’ concentration and decision-making.
+Use shift rotation, including rest periods, and a backup incident commander if the incident continues for a long time. It specifically describes 8-hour breaks after about 24 hours into an investigation. The key lesson is not to treat exhaustion as a badge of dedication. Tired responders can make mistakes, overlook evidence or implement the wrong change.
+> Tip: If an incident continues for a long period and the team is exhausted, think staff rotation and a backup incident commander.`],
+[4,"Four Questions to Answer in Every Investigation",`These help the CSIRT decide what to do next and how serious the incident is.
+## A. Scope — What is affected?
+Determine how many systems, users, networks or services are involved. Example: An alert mentions one computer, but firewall logs reveal that ten other computers contacted the same malicious server. The scope is larger than first suspected.
+## B. Impact — How much damage could occur?
+Connected to the CIA triad:
+- Confidentiality: Information is disclosed to unauthorized people.
+- Integrity: Information is changed without authorization.
+- Availability: Systems or data become unavailable.
+Example: Ransomware encrypts files on 15 servers. The immediate impact includes reduced data availability.
+## C. Root cause — How did it happen?
+Identify the underlying weaknesses and chain of events that enabled the incident. Example: A phishing email leads to a stolen password, which allows an attacker to access an internal system. The root cause may involve several contributing failures, not just one event.
+## D. Attribution — Who was responsible?
+Attribution attempts to identify the attacker or organization behind the attack. It can consume significant time and resources. Containing the incident and protecting the organization may be more urgent than conclusively identifying the attacker.
+## The CIA triad: quick comparison
+| Attack scenario | Main security property affected
+| Stolen customer records are exposed | Confidentiality
+| An attacker changes payment records | Integrity
+| Ransomware prevents access to files | Availability
+An incident can affect more than one property. For example, ransomware may affect availability while also stealing confidential information.
+## What is “patient zero”?
+Patient zero refers to the first compromised system. Identifying it can help the team understand how the incident began. However, determine the scope of the incident before focusing too heavily on patient zero. Knowing the first infected computer is not enough if many other systems are still compromised.`],
+[4,"Four Ways to Contain an Attack",`Containment means limiting an incident’s damage and preventing it from spreading. Four approaches:
+- Physical containment: Physically disconnect an affected system, such as unplugging its network cable or turning off its wireless connection. Best clue: Someone must physically reach the affected device to disconnect it.
+- Network containment: Isolate affected systems or interrupt their network connectivity. There are practical challenges in finding and disconnecting many systems spread across a large organization. Best clue: The immediate aim is to cut the affected system off from the network.
+- Perimeter containment: Use the organization’s border firewall to block malicious external IP addresses or traffic, stopping affected systems from communicating with an attacker or downloading additional malicious components. Best clue: A firewall rule blocks traffic at the organization’s network boundary.
+- Virtual containment: Use virtualization tools, hypervisors or virtual switches to isolate virtual systems. Virtual machines may be paused to preserve evidence for later analysis. Best clue: The affected systems are virtual machines or are controlled through virtualization infrastructure.
+## The tricky part: physical vs. network containment
+The wording overlaps: both involve disconnecting an affected system from network connectivity. Focus on the method described:
+- An employee unplugs the computer’s Ethernet cable: physical containment.
+- The team isolates a group of affected systems by managing their network connections: network containment.
+- The team blocks a malicious external IP on the border firewall: perimeter containment.
+- An administrator isolates compromised virtual machines using a hypervisor: virtual containment.
+Physically disconnecting many devices can be slow, especially when systems are distributed across multiple locations. That delay can give malware more time to spread.
+## Containment scenario
+An infected server is repeatedly downloading additional malicious code from a known external IP address. The team identifies that IP and adds a blocking rule to the border firewall. The answer is perimeter containment. Why not eradication? Because the immediate action is stopping the malicious communication. The team has not necessarily removed the malware from the server yet.`],
+[4,"Cleaning Up: Eradication and Recovery",`After investigating and containing an incident, the organization must remove the threat and return systems to normal operation. Rushing can bring the threat back: an infected system might be reconnected, or a vulnerable system might be left unpatched.
+## Eradication: remove the threat
+Removing the obvious malicious file does not always remove everything. Techniques such as process injection and DLL hijacking can make complete eradication more difficult. A three-stage VLAN approach:
+1. Stage 1 — Infected VLAN: Place infected systems in a separate, isolated network segment so they cannot continue spreading the threat.
+2. Stage 2 — Staging VLAN: Reimage the systems using a trusted source. Reimaging means rebuilding the system rather than assuming that deleting a suspicious file is sufficient.
+3. Stage 3 — Production VLAN: Return the system to the production environment once it is considered secure, with heightened monitoring.
+Virtual systems can also be reverted virtual systems to a last known safe snapshot, but only if the team is confident that the snapshot predates the compromise. Otherwise, the snapshot could contain the threat too.
+## Recovery: return to normal safely
+- Ensure systems are properly patched.
+- Create additional detection and prevention alerts.
+- Follow change management.
+- Conduct a full vulnerability scan of all systems.
+- Perform an after-action review.
+Change management means handling system changes through an appropriate process rather than making undocumented, uncontrolled changes during recovery.
+## Eradication vs. recovery
+| Eradication | Recovery
+| Remove the malicious code or threat. | Restore systems and operations safely.
+| Rebuild an infected system from a trusted source when appropriate. | Patch systems, scan for vulnerabilities and monitor for suspicious activity.
+| Make sure the threat is removed. | Make sure the environment is safe to resume normal use.
+> Tip: Removing the attacker is not the same as proving that the environment is safe to return to normal.`],
+[4,"The Full Incident Timeline, Start to Finish",`A staff member opens a suspicious attachment. Security alerts indicate that several servers may be communicating with an external attacker. Some files become inaccessible.
+1. Detection: The SOC receives an alert and reports the suspected incident.
+2. Escalation: The incident is passed to the CSIRT with relevant details and logs.
+3. Analysis: The team investigates the scope, impact and likely root cause, including which servers were affected.
+4. Containment: The team isolates affected systems and blocks known malicious external communication where appropriate.
+5. Eradication: The team removes the threat and rebuilds affected systems from trusted sources when needed.
+6. Recovery: The team patches weaknesses, scans systems, restores normal services and monitors for further suspicious activity.
+7. Post-incident review: The team documents findings, identifies lessons and improves its procedures.
+Throughout the incident, the team also maintains secure communications, updates leadership, involves relevant legal or communications staff when necessary, and rotates personnel if the incident is prolonged.`]
+];
+const m=document.getElementById('m'),q=document.getElementById('q');
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/`([^`]+)`/g,'<code>$1</code>');
+const plain=t=>t.replace(/^(## |> |- |\| )/gm,'').replace(/`/g,'');
+function render(t){let h='',l=t.split('\n'),i=0;while(i<l.length){const x=l[i];
+if(x.startsWith('## ')){h+='<h3>'+esc(x.slice(3))+'</h3>';i++}
+else if(x.startsWith('> ')){h+='<div class="tip">'+esc(x.slice(2))+'</div>';i++}
+else if(x.startsWith('- ')){h+='<ul>';while(i<l.length&&l[i].startsWith('- ')){h+='<li>'+esc(l[i].slice(2))+'</li>';i++}h+='</ul>'}
+else if(/^\d+\. /.test(x)){h+='<ol>';while(i<l.length&&/^\d+\. /.test(l[i])){h+='<li>'+esc(l[i].replace(/^\d+\. /,''))+'</li>';i++}h+='</ol>'}
+else if(x.startsWith('| ')){h+='<div class="tw"><table>';let f=1;while(i<l.length&&l[i].startsWith('| ')){const c=l[i].slice(2).split(' | ');h+='<tr>'+c.map(v=>(f?'<th>':'<td>')+esc(v)+(f?'</th>':'</td>')).join('')+'</tr>';f=0;i++}h+='</table></div>'}
+else{h+='<p>'+esc(x)+'</p>';i++}}return h}
+const rt=t=>Math.max(1,Math.round(t.split(/\s+/).length/200));
+function rnd(s){return()=>{s=(s*1664525+1013904223)%4294967296;return s/4294967296}}
+let uid=0;
+function art(seed,kind,hue){const r=rnd(seed*7919+13),id='g'+(uid++);let b='';
+const c1=`hsl(${hue},65%,16%)`,c2=`hsl(${hue+45},70%,38%)`,ln=`hsla(${hue+20},90%,75%,.55)`;
+if(kind==='network'){const P=[];for(let i=0;i<26;i++)P.push([r()*760+20,r()*410+20]);
+P.forEach((a,i)=>P.forEach((p,j)=>{if(j>i&&Math.hypot(a[0]-p[0],a[1]-p[1])<150)b+=`<line x1="${a[0]|0}" y1="${a[1]|0}" x2="${p[0]|0}" y2="${p[1]|0}" stroke="${ln}" stroke-width="1.5"/>`}));
+P.forEach(p=>b+=`<circle cx="${p[0]|0}" cy="${p[1]|0}" r="${(4+r()*6)|0}" fill="${ln}"/>`)}
+else if(kind==='circuit'){for(let i=0;i<16;i++){let x=(r()*800)|0,y=(r()*450)|0,d=`M${x} ${y}`;for(let k=0;k<4;k++){if(k%2)y+=((r()*120-60)|0);else x+=((r()*200-100)|0);d+=`L${x} ${y}`}b+=`<path d="${d}" fill="none" stroke="${ln}" stroke-width="2"/><circle cx="${x}" cy="${y}" r="6" fill="none" stroke="${ln}" stroke-width="2"/>`}}
+else if(kind==='chip'){b+=`<rect x="280" y="125" width="240" height="200" rx="14" fill="hsla(${hue},60%,10%,.7)" stroke="${ln}" stroke-width="3"/><rect x="330" y="175" width="140" height="100" rx="8" fill="none" stroke="${ln}" stroke-width="2"/>`;for(let i=0;i<8;i++){const o=300+i*28;b+=`<path d="M${o} 125v-60M${o} 325v60M280 ${145+i*24}h-70M520 ${145+i*24}h70" stroke="${ln}" stroke-width="3"/>`}}
+else if(kind==='code'){b+=`<rect x="150" y="60" width="500" height="330" rx="14" fill="hsla(${hue},60%,8%,.75)"/>`;for(let i=0;i<10;i++){const x=190+((r()*3)|0)*30,w=(60+r()*220)|0;b+=`<rect x="${x}" y="${95+i*30}" width="${w}" height="10" rx="5" fill="${ln}"/>`}}
+else{for(let i=0;i<7;i++){const y=90+i*45,a=(20+r()*50)|0;b+=`<path d="M0 ${y}C200 ${y-a} 400 ${y+a} 800 ${y-a/2}" fill="none" stroke="${ln}" stroke-width="2.5"/>`}}
+return `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs><rect width="800" height="450" fill="url(#${id})"/>${b}</svg>`}
+const CK=['network','circuit','code','chip','wave'],CH=[210,160,280,25,190],TH={AI:280,Cloud:200,Hardware:25,Software:150},T=['All','AI','Cloud','Hardware','Software'];
+const F=[
+["AI","How Small Language Models Are Moving Onto Your Phone","Smaller AI models are getting good enough to run locally, trading raw size for speed, privacy and lower cost.","Large AI models usually run in data centers, but a growing class of smaller models is designed to run directly on phones and laptops. Techniques such as quantization shrink a model’s memory needs, while specialized chips speed up the math.\nRunning locally has clear benefits: responses can be faster, features can work offline, and personal data does not have to leave the device. The trade-off is that smaller models are usually less capable on complex tasks, so many products combine on-device and cloud models.","chip"],
+["Cloud","Edge Computing Explained: Why Data Is Moving Closer to You","Instead of sending everything to a distant data center, edge computing processes data near where it is created.","Edge computing places processing power close to devices such as cameras, sensors and phones. Because data travels a shorter distance, delays shrink and less traffic has to cross the wider network.\nIt is often used where fast reactions matter, such as industrial equipment, video analysis and connected vehicles. It usually complements the cloud rather than replacing it: the edge handles quick decisions, and the cloud handles storage and heavy analysis.","network"],
+["Hardware","Inside the Modern Chip: What Makes Processors Faster Each Year","Smaller transistors are only part of the story. Chip design, memory and specialized cores matter just as much.","A processor’s speed depends on more than its clock rate. Designers add more cores, larger caches and specialized units for tasks like graphics and AI, so work is spread across the hardware best suited to it.\nPackaging also matters. Placing memory and processing parts closer together reduces the time spent moving data, which is often a bigger bottleneck than the calculations themselves.","chip"],
+["Software","Why More Teams Are Rethinking Microservices","Splitting an app into many small services has benefits, but it also adds complexity that not every team needs.","Microservices break an application into small, independently deployed pieces. This can help large teams work in parallel and scale individual parts as needed.\nThe cost is added complexity: more network calls, more monitoring and harder debugging. Some teams are returning to simpler designs with a well-organized single application, moving to services only when a real need appears.","circuit"],
+["Hardware","Battery Tech: The Slow Race Beyond Lithium-Ion","Lithium-ion still dominates, but researchers are working on safer, denser and longer-lasting alternatives.","Most phones, laptops and electric vehicles rely on lithium-ion batteries. Improvements come in small steps: better materials, smarter charging and improved battery management software.\nNew approaches, including solid-state designs, aim to increase energy density and safety. Moving from the lab to mass production is difficult, which is why progress tends to be gradual rather than sudden.","wave"],
+["AI","Prompting Basics: Getting Better Answers From AI Tools","Clear context, a defined goal and a requested format go a long way toward better results.","The quality of an AI tool’s answer often depends on the quality of the request. State what you want, give relevant background, and say what format you would like, such as a short summary or a step-by-step list.\nIf the first answer misses the mark, refine the request instead of starting over. Adding an example of what you want is one of the simplest ways to improve results.","code"],
+["Software","Open Source Explained: How Free Software Pays the Bills","Much of the software behind the internet is open source. Here is how projects and companies sustain it.","Open source software publishes its source code under a license that lets others use, study and modify it. It powers everything from web servers to programming languages.\nProjects are sustained in several ways: company sponsorship, paid support and hosting, donations and employees paid to contribute. Funding remains an ongoing challenge, especially for small but widely used projects.","code"],
+["Cloud","Serverless Computing: Running Code Without Managing Servers","Serverless platforms run your code on demand, so you pay for usage instead of idle machines.","In a serverless model, developers upload small functions and the cloud provider handles the servers, scaling and availability. The code runs only when triggered, such as by a web request or a file upload.\nThis can lower costs for irregular workloads and speed up development. Limits include execution time restrictions and the possibility of a short delay when a function starts after sitting idle.","network"]];
+const A=[["Nimbus Cloud","Spin up servers in seconds","Fast, simple cloud hosting for every project.","Start free trial",200],["Voltix","The laptop built for long days","All-day battery. Featherlight design.","Shop now",25],["Codeforge","Ship code faster","The developer platform your team will love.","Try Codeforge",150],["Shieldly","Protect every device","Simple security for home and small business.","Get protected",280]];
+function ad(i,k){const a=A[i%A.length];return `<div class="ad ${k}"><span class="al">Advertisement</span><div class="ab" style="background:linear-gradient(135deg,hsl(${a[4]},65%,18%),hsl(${a[4]+45},70%,38%))"><div><b>${a[0]}</b><h5>${a[1]}</h5><p>${a[2]}</p></div><span class="cta">${a[3]}</span></div></div>`}
+function item(i){const s=S[i],p=plain(s[2]).split('\n')[0];return `<div class="item" onclick="open_(${i})"><span class="meta">${L[s[0]]} · ${rt(s[2])} min read</span><br><b>${esc(s[1])}</b><p>${esc(p.length>150?p.slice(0,150)+'…':p)}</p></div>`}
+function itemF(j){const f=F[j];return `<div class="item" onclick="openF(${j})"><span class="meta">${f[0]} · ${rt(f[3])} min read</span><br><b>${esc(f[1])}</b><p>${esc(f[2])}</p></div>`}
+function tabs(a){document.getElementById('tb').innerHTML=T.map(x=>`<span class="${x==a?'on':''}" onclick="q.value='';home('${x}')">${x}</span>`).join('')}
+function side(a){let h='<h4>Security Deep Dives</h4>';L.forEach((c,k)=>{h+=`<details${a>=0&&S[a][0]==k?' open':''}><summary>${esc(c)}</summary>`+S.map((s,i)=>s[0]==k?`<a class="${i==a?'on':''}" onclick="open_(${i})">${esc(s[1])}</a>`:'').join('')+'</details>'});document.getElementById('sd').innerHTML=h}
+function card(j,big){const f=F[j];return `<div class="card${big?' big':''}" onclick="openF(${j})"><div class="img">${art(j+50,f[4],TH[f[0]])}</div><div class="tx"><span class="tag">${f[0]}</span><h3>${esc(f[1])}</h3><p>${esc(f[2])}</p><span class="meta">${rt(f[3])} min read</span></div></div>`}
+function home(t){tabs(t);side(-1);const ids=F.map((_,j)=>j).filter(j=>t=='All'||F[j][0]==t);m.innerHTML=`<h2 class="lh">${t=='All'?'Latest in tech':t}</h2><div class="grid">${(c=>{if(c.length>4)c.splice(4,0,ad(2,'rect'));return c.join('')})(ids.map((j,k)=>card(j,t=='All'&&k==0)))}</div>`;window.scrollTo(0,0)}
+function openF(j){const f=F[j];tabs(f[0]);side(-1);m.innerHTML=`<span class="back" onclick="go(q.value)">← Back</span><article><p class="meta" style="margin-top:20px"><span class="tag">${f[0]}</span> · ${rt(f[3])} min read</p><h1>${esc(f[1])}</h1><div class="img">${art(j+50,f[4],TH[f[0]])}</div>${ad(j+1,'wide')}${f[3].split('\n').map(x=>'<p>'+esc(x)+'</p>').join('')}</article>`;window.scrollTo(0,0)}
+function open_(i){const s=S[i];tabs('');side(i);
+m.innerHTML=`<span class="back" onclick="go(q.value)">← Back</span><article><p class="meta" style="margin-top:20px"><span class="tag">${esc(L[s[0]])}</span> · ${rt(s[2])} min read</p><h1>${esc(s[1])}</h1><div class="img">${art(i+1,CK[s[0]],CH[s[0]])}</div>${ad(i,'wide')}${render(s[2])}</article><div class="nav"><a ${i>0?`onclick="open_(${i-1})">← ${esc(S[i-1][1])}`:'>'}</a><a ${i<S.length-1?`onclick="open_(${i+1})">${esc(S[i+1][1])} →`:'>'}</a></div>`;window.scrollTo(0,0)}
+function go(v){v=(v||'').trim().toLowerCase();if(!v){home('All');return}
+const w=v.split(/\s+/),has=s=>w.every(k=>s.includes(k));
+const r=S.map((_,i)=>i).filter(i=>has((S[i][1]+' '+plain(S[i][2])).toLowerCase()));
+const f=F.map((_,j)=>j).filter(j=>has((F[j][1]+' '+F[j][2]+' '+F[j][3]).toLowerCase()));
+const ti=r.filter(i=>S[i][1].toLowerCase().includes(v));
+if(r.length+f.length==1){r.length?open_(r[0]):openF(f[0]);return}
+if(ti.length==1){open_(ti[0]);return}
+tabs('');side(-1);const n=r.length+f.length;
+m.innerHTML=n?`<p class="meta">${n} results for “${esc(v)}”</p>`+r.map(item).join('')+f.map(itemF).join(''):'<p class="none">No results found.</p>';window.scrollTo(0,0)}
+document.getElementById('lb').innerHTML=ad(0,'wide');document.getElementById('ad1').innerHTML=ad(1,'rect');go('');
+</script></body></html>
